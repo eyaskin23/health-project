@@ -1,0 +1,21 @@
+name: health-record-chatbot
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy
+  - pandas
+  - scikit-learn
+  - spacy
+  - pytorch
+  - transformers
+  - tesseract
+  - pypdf2
+  - sqlalchemy
+  - flask
+  - pip
+  - tika
+  - pdf2image
+  - pip:
+    - PyPDF2
