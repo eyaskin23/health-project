@@ -424,7 +424,7 @@ def chat():
         daily_request_count += 1
         daily_token_count += tokens_used 
 
-    return jsonify({'reply': bot_reply})
+    return jsonify({'reply': bot_reply}) #test
 
 if __name__ == '__main__':
     app.run(debug=True)
