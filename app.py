@@ -29,7 +29,7 @@ os.makedirs(app.config['STATIC_FOLDER'], exist_ok=True)
 dataset = pd.read_csv('lab_results.csv')
 
 # Set OpenAI API key
-openai.api_key = "insert_key_here"
+openai.api_key = "insert-api-key"
 
 # Global variables for rate limiting and extracted text
 rate_limit_interval = 5  # Reduced interval to improve response rate

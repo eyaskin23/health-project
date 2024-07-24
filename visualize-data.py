@@ -1,6 +1,8 @@
 import PyPDF2
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
 def extract_text_from_pdf(pdf_path):
     with open(pdf_path, 'rb') as file:
@@ -46,8 +48,7 @@ def visualize_lab_results(data):
     num_tests = len(data)
     cols = 2
     rows = (num_tests // cols) + (num_tests % cols > 0)
-    fig, ax = plt.subplots(rows, cols, figsize=(16, 8))
-    fig.tight_layout(pad=5.0)
+    fig = make_subplots(rows=rows, cols=cols, subplot_titles=list(data.keys()))
     
     reference_ranges = {
         "WBC": (4.0, 10.1),
@@ -63,31 +64,40 @@ def visualize_lab_results(data):
         "Glucose": (70, 99)
     }
 
-    ax = ax.flatten()
     for i, (test, value) in enumerate(data.items()):
         ref_range = reference_ranges[test]
         all_range = [ref_range[0] - 10, ref_range[1] + 10]  # Adjust the overall range for visualization
         
-        ax[i].hlines(0, all_range[0], all_range[1], color='lightgray', linewidth=8)
-        ax[i].hlines(0, ref_range[0], ref_range[1], color='lightgreen', linewidth=8)
-        ax[i].plot([value], [0], 'ks', markersize=12)  # Black square for the specific value
+        row = (i // cols) + 1
+        col = (i % cols) + 1
         
-        ax[i].set_xlim(all_range[0], all_range[1])
-        ax[i].set_yticks([])
-        ax[i].set_title(f'{test}', fontsize=14, pad=20)
+        fig.add_trace(go.Scatter(x=[all_range[0], all_range[1]], y=[0, 0], 
+                                 mode='lines', line=dict(color='lightgray', width=8), showlegend=False), 
+                      row=row, col=col)
         
-        ax[i].annotate(f'{value}', xy=(value, 0), xytext=(0, -30), textcoords='offset points',
-                       bbox=dict(boxstyle="round,pad=0.3", edgecolor='black', facecolor='white'),
-                       ha='center', fontsize=12)
-        ax[i].annotate(f'{ref_range[0]}', xy=(ref_range[0], 0), xytext=(0, 10), textcoords='offset points',
-                       ha='center', fontsize=10, color='gray')
-        ax[i].annotate(f'{ref_range[1]}', xy=(ref_range[1], 0), xytext=(0, 10), textcoords='offset points',
-                       ha='center', fontsize=10, color='gray')
+        fig.add_trace(go.Scatter(x=[ref_range[0], ref_range[1]], y=[0, 0], 
+                                 mode='lines', line=dict(color='lightgreen', width=8), showlegend=False), 
+                      row=row, col=col)
+        
+        fig.add_trace(go.Scatter(x=[value], y=[0], 
+                                 mode='markers', marker=dict(color='black', size=12, symbol='square'), showlegend=False), 
+                      row=row, col=col)
+        
+        fig.add_annotation(x=value, y=0, text=f'{value}', showarrow=True, arrowhead=2,
+                           ax=0, ay=-30, font=dict(size=12, color='black'),
+                           bgcolor='white', bordercolor='black', row=row, col=col)
+        
+        fig.add_annotation(x=ref_range[0], y=0, text=f'{ref_range[0]}', showarrow=False,
+                           yshift=10, font=dict(size=10, color='gray'), row=row, col=col)
+        
+        fig.add_annotation(x=ref_range[1], y=0, text=f'{ref_range[1]}', showarrow=False,
+                           yshift=10, font=dict(size=10, color='gray'), row=row, col=col)
+        
+    fig.update_layout(height=rows*200, width=800, title_text="Lab Results Visualization", showlegend=False)
+    fig.update_xaxes(showticklabels=False)
+    fig.update_yaxes(showticklabels=False)
     
-    for j in range(i + 1, len(ax)):
-        fig.delaxes(ax[j])  # Remove unused subplots
-    
-    plt.show()
+    fig.show()
 
 # Main Execution
 pdf_path = 'pdf_folder/pdf1.pdf'  # Update the path to your PDF file
