@@ -7,7 +7,7 @@ import threading
 import PyPDF2
 from werkzeug.utils import secure_filename
 import matplotlib
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt #test
 import logging
 
 # Set up logging
