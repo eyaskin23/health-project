@@ -422,7 +422,7 @@ def chat():
             return jsonify({'reply': 'There was an error processing your request. Please try again later.'}), 500
 
         daily_request_count += 1
-        daily_token_count += tokens_used #test that this works
+        daily_token_count += tokens_used 
 
     return jsonify({'reply': bot_reply})
 
