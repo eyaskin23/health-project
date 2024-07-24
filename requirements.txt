@@ -4,4 +4,6 @@ numpy
 PyPDF2
 matplotlib
 plotly
-openai
+openai==0.28
+python-dotenv
+werkzeug
