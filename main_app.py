@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 import os
 from src.chat_service import chat
@@ -20,7 +20,7 @@ extracted_text_global = ""
 
 @app.route('/')
 def home():
-    return app.send_static_file('index.html')
+    return app.send_static_file('dashboard.html')
 
 @app.route('/results', methods=['GET'])
 def get_results():
@@ -61,9 +61,9 @@ def visualize():
     else:
         return jsonify({"message": "Error creating visualization"}), 500
 
-@app.route('/chat', methods=['POST'])
-def chat_endpoint():
-    return chat()
+@app.route('/chatbot')
+def chatbot():
+    return app.send_static_file('chatbot.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port = 8000)
