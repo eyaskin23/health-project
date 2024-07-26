@@ -61,7 +61,7 @@ def create_dataset(results):
     return df
 
 # Define the PDF path
-pdf_path = "pdf1.pdf"
+pdf_path = "pdf_folder/pdf1.pdf"
 
 # Extract text from the PDF
 extracted_text = extract_text_from_pdf(pdf_path)
