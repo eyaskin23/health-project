@@ -1,15 +1,15 @@
-from flask import Flask, render_template, request, jsonify, url_for, redirect
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import pandas as pd
 import openai
 import os
 import time
 import threading
-import PyPDF2
 from werkzeug.utils import secure_filename
 from generate_images import process_pdf
-from src.file_service import update_dataset  # Import the new script
+from src.file_service import update_dataset
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)  # Secret key for session management
 
 app.config['UPLOAD_FOLDER'] = 'pdf_folder'
 app.config['STATIC_FOLDER'] = 'static'
@@ -21,34 +21,52 @@ dataset = pd.read_csv('lab_results.csv')
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Rate limiting variables
-rate_limit_interval = 5  # Reduced interval to improve response rate
+rate_limit_interval = 5
 daily_request_count = 0
 max_daily_requests = 200
 daily_token_count = 0
 max_daily_tokens = 200000
 start_of_day = time.time()
 lock = threading.Lock()
-last_request_time = time.time()  # Initialize last_request_time
+last_request_time = time.time()
 
 def reset_daily_counters():
     global daily_request_count, daily_token_count, start_of_day
     while True:
-        time.sleep(86400)  # Sleep for one day
+        time.sleep(86400)
         with lock:
             daily_request_count = 0
             daily_token_count = 0
             start_of_day = time.time()
 
-# Start a thread to reset the daily counters
 threading.Thread(target=reset_daily_counters, daemon=True).start()
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Dummy authentication
+        if username == 'admin' and password == 'password':
+            session['logged_in'] = True
+            return redirect(url_for('dashboard'))
+        else:
+            return render_template('login.html', message='Invalid credentials')
+
+    return render_template('login.html')
 
 @app.route('/')
 def home():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
     return redirect('/dashboard')
 
 @app.route('/dashboard')
 def dashboard():
-    # Load data for dashboard
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
     data = [
         {"Test": "WBC", "Value": 6.13, "Image": "WBC.png"},
         {"Test": "RBC", "Value": 4.86, "Image": "RBC.png"},
@@ -64,17 +82,22 @@ def dashboard():
     ]
     return render_template('dashboard.html', data=data)
 
-
 @app.route('/profile')
 def profile():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
     return render_template('profile.html')
 
 @app.route('/chatbot')
 def chatbot():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
     return render_template('chatbot.html')
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
     if 'file' not in request.files:
         return jsonify({"message": "No file part"}), 400
     file = request.files['file']
@@ -90,8 +113,10 @@ def upload_file():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    global daily_request_count, daily_token_count, last_request_time
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
 
+    global daily_request_count, daily_token_count, last_request_time
     current_time = time.time()
 
     with lock:
@@ -107,7 +132,7 @@ def chat():
         last_request_time = current_time
 
         user_message = request.json['message']
-        print(f"Received message: {user_message}")  # Debugging statement
+        print(f"Received message: {user_message}")
         try:
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
@@ -117,9 +142,8 @@ def chat():
                 ]
             )
             bot_reply = response['choices'][0]['message']['content'].strip()
-            print(f"Bot reply: {bot_reply}")  # Debugging statement
+            print(f"Bot reply: {bot_reply}")
 
-            # Calculate token usage
             tokens_used = response['usage']['total_tokens']
             print(f"Tokens used: {tokens_used}")
 
