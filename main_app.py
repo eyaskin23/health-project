@@ -1,18 +1,20 @@
-from flask import Flask, render_template, request, jsonify, url_for, redirect
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 import pandas as pd
 import openai
 import os
 import time
 import threading
-import PyPDF2
+import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from generate_images import process_pdf
-from src.file_service import update_dataset  # Import the new script
+from src.file_service import update_dataset
 
 app = Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = 'pdf_folder'
 app.config['STATIC_FOLDER'] = 'static'
+app.secret_key = os.urandom(24)
 
 # Load the dataset
 dataset = pd.read_csv('lab_results.csv')
@@ -42,13 +44,60 @@ def reset_daily_counters():
 # Start a thread to reset the daily counters
 threading.Thread(target=reset_daily_counters, daemon=True).start()
 
+def get_db_connection():
+    conn = sqlite3.connect('users.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        conn = get_db_connection()
+        user = conn.execute('SELECT * FROM users WHERE username = ?', (username,)).fetchone()
+        conn.close()
+        
+        if user and check_password_hash(user['password'], password):
+            session['logged_in'] = True
+            return redirect(url_for('dashboard'))
+        else:
+            return render_template('login.html', message='Invalid credentials')
+
+    return render_template('login.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        
+        conn = get_db_connection()
+        try:
+            conn.execute('INSERT INTO users (username, password) VALUES (?, ?)', (username, hashed_password))
+            conn.commit()
+        except sqlite3.IntegrityError:
+            return render_template('register.html', message='Username already exists')
+        finally:
+            conn.close()
+        
+        return redirect(url_for('login'))
+
+    return render_template('register.html')
+
 @app.route('/')
 def home():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
     return redirect('/dashboard')
 
 @app.route('/dashboard')
 def dashboard():
-    # Load data for dashboard
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
     data = [
         {"Test": "WBC", "Value": 6.13, "Image": "WBC.png"},
         {"Test": "RBC", "Value": 4.86, "Image": "RBC.png"},
@@ -64,9 +113,10 @@ def dashboard():
     ]
     return render_template('dashboard.html', data=data)
 
-
 @app.route('/profile')
 def profile():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
     return render_template('profile.html')
 
 @app.route('/chatbot')
