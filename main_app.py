@@ -73,8 +73,49 @@ def profile():
 def chatbot():
     return render_template('chatbot.html')
 
+def extract_text_from_pdf(pdf_path):
+    with open(pdf_path, 'rb') as file:
+        reader = PyPDF2.PdfReader(file)
+        text = ''
+        for page in reader.pages:
+            text += page.extract_text()
+    return text
+
+def parse_pdf_text(text):
+    data = {}
+    lines = text.split("\n")
+    
+    for line in lines:
+        if "WBC" in line and "x10(3)" in line:
+            data["WBC"] = float(line.split()[1])
+        elif "RBC" in line and "x10(6)" in line:
+            data["RBC"] = float(line.split()[1])
+        elif "HGB" in line and "g/dL" in line:
+            data["HGB"] = float(line.split()[1])
+        elif "HCT" in line and "%" in line:
+            data["HCT"] = float(line.split()[1])
+        elif "MCV" in line and "fL" in line:
+            data["MCV"] = float(line.split()[1])
+        elif "MCH" in line and "pg" in line:
+            data["MCH"] = float(line.split()[1])
+        elif "MCHC" in line and "g/dL" in line:
+            data["MCHC"] = float(line.split()[1])
+        elif "RDW" in line and "%" in line:
+            data["RDW"] = float(line.split()[1])
+        elif "PLATELET COUNT" in line and "x10(3)/uL" in line:
+            try:
+                data["PLATELET COUNT"] = float(line.split()[2])
+            except ValueError:
+                data["PLATELET COUNT"] = float(line.split()[3])
+        elif "Hemoglobin A1c" in line and "%" in line:
+            data["Hemoglobin A1c"] = float(line.split()[2])
+        elif "Glucose" in line and "mg/dL" in line:
+            data["Glucose"] = float(line.split()[1])
+    return data
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    global extracted_text_global
     if 'file' not in request.files:
         return jsonify({"message": "No file part"}), 400
     file = request.files['file']
@@ -84,13 +125,14 @@ def upload_file():
         filename = secure_filename(file.filename)
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
         file.save(file_path)
-        output_folder = app.config['STATIC_FOLDER']
-        image_paths = process_pdf(file_path, output_folder)
-        return jsonify({"message": "File successfully uploaded and processed", "images": image_paths}), 200
+        extracted_text_global = extract_text_from_pdf(file_path)
+        parsed_data = parse_pdf_text(extracted_text_global)
+        update_dataset(parsed_data)
+        return jsonify({"message": "File successfully uploaded and processed"}), 200
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    global daily_request_count, daily_token_count, last_request_time
+    global daily_request_count, daily_token_count, last_request_time, extracted_text_global
 
     current_time = time.time()
 
@@ -109,10 +151,16 @@ def chat():
         user_message = request.json['message']
         print(f"Received message: {user_message}")  # Debugging statement
         try:
+            if "visualize my lab results" in user_message.lower():
+                # Generate the visualization
+                plot_path = visualize_lab_results(parse_pdf_text(extracted_text_global))
+                return jsonify({'reply': 'Here is the visualization of your lab results:', 'visualization': f"/{plot_path}"}), 200
+            
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "system", "content": "You are a helpful assistant with access to health records."},
+                    {"role": "user", "content": f"Here is the extracted text from the PDF:\n{extracted_text_global}"},
                     {"role": "user", "content": user_message}
                 ]
             )
@@ -126,7 +174,7 @@ def chat():
         except openai.error.RateLimitError:
             return jsonify({'reply': 'API rate limit exceeded. Please wait a moment and try again.'}), 429
         except Exception as e:
-            print(f"Error: {e}")
+            logging.error(f"Error in chat endpoint: {e}")
             return jsonify({'reply': 'There was an error processing your request. Please try again later.'}), 500
 
         daily_request_count += 1
@@ -136,3 +184,4 @@ def chat():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
