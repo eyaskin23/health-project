@@ -7,6 +7,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -70,7 +81,7 @@
 
         .chart-container {
             position: relative;
-            height: 40vh;
+            height: 270px; /* Adjust the height here */
             width: 100%;
         }
 
@@ -114,15 +125,14 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">{{ stat['Test'] }}</h5>
-                        <img src="{{ url_for('static', filename=stat['Image']) }}" class="img-fluid" alt="{{ stat['Test'] }}">
+                        <p class="card-text">{{ stat['Value'] }}</p>
+                        <div class="chart-container">
+                            <img src="{{ url_for('static', filename='plots/' ~ stat['Test'] ~ '.svg') }}" alt="{{ stat['Test'] }}" class="img-fluid">
+                        </div>
                     </div>
                 </div>
             </div>
             {% endfor %}
-        </div>
-
-        <div class="footer">
-            <p>&copy; 2024 CliniqAI. All Rights Reserved.</p>
         </div>
     </div>
 

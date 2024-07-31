@@ -1,4 +1,8 @@
+import io
+import logging
+import PyPDF2
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from matplotlib import pyplot as plt
 import pandas as pd
 import openai
 import os
@@ -9,6 +13,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from generate_images import process_pdf
 from src.file_service import update_dataset
+from generate_plots import generate_plots
 
 app = Flask(__name__)
 
@@ -99,17 +104,17 @@ def dashboard():
         return redirect(url_for('login'))
     
     data = [
-        {"Test": "WBC", "Value": 6.13, "Image": "WBC.png"},
-        {"Test": "RBC", "Value": 4.86, "Image": "RBC.png"},
-        {"Test": "HGB", "Value": 13.3, "Image": "HGB.png"},
-        {"Test": "HCT", "Value": 41.0, "Image": "HCT.png"},
-        {"Test": "MCV", "Value": 84.4, "Image": "MCV.png"},
-        {"Test": "MCH", "Value": 27.4, "Image": "MCH.png"},
-        {"Test": "MCHC", "Value": 32.4, "Image": "MCHC.png"},
-        {"Test": "RDW", "Value": 13.7, "Image": "RDW.png"},
-        {"Test": "PLATELET COUNT", "Value": 227, "Image": "PLATELET_COUNT.png"},
-        {"Test": "Hemoglobin A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.png"},
-        {"Test": "Glucose", "Value": 99, "Image": "Glucose.png"}
+        {"Test": "WBC", "Value": 6.13, "Image": "WBC.svg"},
+        {"Test": "RBC", "Value": 4.86, "Image": "RBC.svg"},
+        {"Test": "HGB", "Value": 13.3, "Image": "HGB.svg"},
+        {"Test": "HCT", "Value": 41.0, "Image": "HCT.svg"},
+        {"Test": "MCV", "Value": 84.4, "Image": "MCV.svg"},
+        {"Test": "MCH", "Value": 27.4, "Image": "MCH.svg"},
+        {"Test": "MCHC", "Value": 32.4, "Image": "MCHC.svg"},
+        {"Test": "RDW", "Value": 13.7, "Image": "RDW.svg"},
+        {"Test": "PLATELET COUNT", "Value": 227, "Image": "PLATELET_COUNT.svg"},
+        {"Test": "Hemoglobin A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.svg"},
+        {"Test": "Glucose", "Value": 99, "Image": "Glucose.svg"}
     ]
     return render_template('dashboard.html', data=data)
 
@@ -130,6 +135,40 @@ def extract_text_from_pdf(pdf_path):
         for page in reader.pages:
             text += page.extract_text()
     return text
+
+def plot_to_svg(data, test):
+    plt.figure()
+    plt.plot(range(len(data)), data, marker='o', linestyle='-', color='b')
+    plt.title(test)
+    plt.xlabel('Time')
+    plt.ylabel('Value')
+    img = io.BytesIO()
+    plt.savefig(img, format='svg')
+    img.seek(0)
+    svg_data = img.getvalue().decode()
+    plt.close()
+    return svg_data
+
+@app.route('/generate_plots')
+def generate_plots():
+    # Example time-series data
+    time_series_data = {
+        "WBC": [6.1, 6.3, 6.2, 6.4, 6.1],
+        "RBC": [4.7, 4.8, 4.9, 4.8, 4.9],
+        "HGB": [13.2, 13.3, 13.5, 13.4, 13.3],
+        "HCT": [40.0, 41.0, 42.0, 41.0, 40.5],
+        "MCV": [85.0, 84.5, 84.0, 83.5, 84.0],
+        "MCH": [28.0, 27.5, 27.0, 26.5, 27.0],
+        "MCHC": [33.0, 32.5, 32.0, 32.5, 32.0],
+        "RDW": [13.5, 13.6, 13.7, 13.8, 13.7],
+        "PLATELET COUNT": [220, 230, 240, 235, 225],
+        "Hemoglobin A1c": [5.5, 5.4, 5.3, 5.4, 5.5],
+        "Glucose": [100, 98, 95, 97, 96]
+    }
+    svg_plots = {}
+    for test, values in time_series_data.items():
+        svg_plots[test] = plot_to_svg(values, test)
+    return jsonify(svg_plots)
 
 def parse_pdf_text(text):
     data = {}
@@ -178,6 +217,7 @@ def upload_file():
         extracted_text_global = extract_text_from_pdf(file_path)
         parsed_data = parse_pdf_text(extracted_text_global)
         update_dataset(parsed_data)
+        generate_plots()
         return jsonify({"message": "File successfully uploaded and processed"}), 200
 
 @app.route('/chat', methods=['POST'])
