@@ -1,0 +1,53 @@
+Rank,City,Percentage of adults who smoke,Percentage of adults in poor physical health,Percentage of adults with COPD,Percentage of adults with cancer,Percentage of adults who have experienced a stroke
+1,"Detroit, MI",28.9,20.9,11.2,6.0,6.2
+2,"Cleveland, OH",27.8,18.7,11.1,5.9,5.6
+3,"Memphis, TN",24.3,17.4,9.3,5.6,4.8
+4,"Milwaukee, WI",23.1,16.0,6.8,5.3,3.7
+5,"Philadelphia, PA",21.8,14.8,7.3,5.8,4.1
+6,"Baltimore, MD",21.7,13.4,7.4,5.7,4.4
+7,"Columbus, OH",21.4,11.7,7.1,5.1,3.1
+8,"Kansas City, MO",21.1,13.6,7.2,6.0,3.6
+9,"Tulsa, OK",20.3,14.6,7.8,6.6,3.7
+10,"Wichita, KS",20.0,13.2,7.1,6.4,3.3
+11,"New Orleans, LA",19.8,13.7,7.5,5.5,4.3
+12,"Jacksonville, FL",19.7,13.9,8.2,6.0,3.6
+13,"Oklahoma City, OK",19.6,14.1,7.5,6.1,3.5
+14,"Las Vegas, NV",19.3,15.1,7.7,6.1,3.3
+15,"Tampa, FL",19.1,13.9,7.5,5.5,3.5
+16,"Omaha, NE",18.7,11.0,6.0,6.1,3.0
+17,"Tucson, AZ",18.6,14.5,6.6,5.9,3.2
+18,"Brookhaven, NY",18.5,15.0,9.4,8.5,3.8
+19,"Aurora, CO",18.4,11.6,5.2,5.4,2.7
+20,"Virginia Beach, VA",18.2,10.6,5.5,5.9,2.6
+21,"Miami, FL",17.5,16.1,7.5,5.6,4.2
+22,"Fort Worth, TX",17.5,13.9,6.3,5.2,3.2
+23,"Dallas, TX",17.5,13.2,6.2,5.0,3.4
+24,"Phoenix, AZ",17.4,14.2,6.2,5.4,2.9
+25,"Chicago, IL",17.4,12.0,6.1,5.2,3.4
+26,"Houston, TX",17.1,13.3,6.1,4.8,3.3
+27,"Arlington, TX",16.7,13.0,6.0,5.3,2.8
+28,"Fresno, CA",16.6,15.4,6.4,5.2,3.4
+29,"Mesa, AZ",16.4,14.0,7.0,6.8,3.3
+30,"Charlotte, NC",16.4,10.3,5.5,5.3,2.9
+31,"Bakersfield, CA",16.1,15.1,6.2,5.2,3.1
+32,"Portland, OR",16.1,12.6,5.4,5.9,2.6
+33,"Raleigh, NC",16.1,9.9,5.0,5.2,2.5
+34,"Colorado Springs, CO",16.0,10.9,5.2,5.9,2.7
+35,"Minneapolis, MN",15.6,9.7,3.8,4.4,2.4
+36,"Boston, MA",15.5,11.1,4.7,4.8,2.6
+37,"Atlanta, GA",15.5,11.1,5.7,4.9,3.5
+38,"Denver, CO",15.5,10.0,4.4,5.4,2.4
+39,"San Antonio, TX",15.4,13.4,6.0,5.2,3.2
+40,"Albuquerque, NM",15.4,12.8,5.6,5.9,2.9
+41,"El Paso, TX",15.1,14.1,5.9,5.2,3.3
+42,"New York, NY",15.1,12.1,6.1,5.6,3.2
+43,"Sacramento, CA",14.8,13.1,5.6,5.4,3.1
+44,"Long Beach, CA",13.7,12.9,5.2,5.0,2.8
+45,"Oakland, CA",13.7,12.8,5.1,5.2,3.2
+46,"Los Angeles, CA",13.4,13.3,5.2,5.1,2.9
+47,"Austin, TX",13.3,9.6,4.1,4.4,2.1
+48,"Anaheim, CA",12.7,13.1,5.0,5.0,2.6
+49,"San Diego, CA",12.7,11.5,4.3,5.3,2.4
+50,"San Francisco, CA",11.8,9.7,3.9,5.2,2.4
+51,"San Jose, CA",10.9,10.9,3.9,5.0,2.3
+52,"Seattle, WA",10.3,8.8,3.5,5.7,2.1

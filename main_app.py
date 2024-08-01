@@ -104,17 +104,19 @@ def dashboard():
         return redirect(url_for('login'))
     
     data = [
-        {"Test": "WBC", "Value": 6.13, "Image": "WBC.svg"},
-        {"Test": "RBC", "Value": 4.86, "Image": "RBC.svg"},
-        {"Test": "HGB", "Value": 13.3, "Image": "HGB.svg"},
-        {"Test": "HCT", "Value": 41.0, "Image": "HCT.svg"},
-        {"Test": "MCV", "Value": 84.4, "Image": "MCV.svg"},
-        {"Test": "MCH", "Value": 27.4, "Image": "MCH.svg"},
-        {"Test": "MCHC", "Value": 32.4, "Image": "MCHC.svg"},
-        {"Test": "RDW", "Value": 13.7, "Image": "RDW.svg"},
-        {"Test": "PLATELET COUNT", "Value": 227, "Image": "PLATELET_COUNT.svg"},
-        {"Test": "Hemoglobin A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.svg"},
-        {"Test": "Glucose", "Value": 99, "Image": "Glucose.svg"}
+        # {"Test": "WBC", "Value": 6.13, "Image": "WBC.svg"},
+        # {"Test": "RBC", "Value": 4.86, "Image": "RBC.svg"},
+        # {"Test": "HGB", "Value": 13.3, "Image": "HGB.svg"},
+        # {"Test": "HCT", "Value": 41.0, "Image": "HCT.svg"},
+        # {"Test": "MCV", "Value": 84.4, "Image": "MCV.svg"},
+        # {"Test": "MCH", "Value": 27.4, "Image": "MCH.svg"},
+        # {"Test": "MCHC", "Value": 32.4, "Image": "MCHC.svg"},
+        # {"Test": "RDW", "Value": 13.7, "Image": "RDW.svg"},
+        # {"Test": "PLATELET COUNT", "Value": 227, "Image": "PLATELET_COUNT.svg"},
+        # {"Test": "Hemoglobin A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.svg"},
+        # {"Test": "Glucose", "Value": 99, "Image": "Glucose.svg"},
+        {"Test": "Smoking Rates vs Air Quality", "Value": "Fresno: ", "Image": "california.svg"},
+        {"Test": "Smoking Rates vs Air Quality", "Value": "Fresno: ", "Image": "fresno_aqi.svg"}
     ]
     return render_template('dashboard.html', data=data)
 
