@@ -37,6 +37,9 @@ start_of_day = time.time()
 lock = threading.Lock()
 last_request_time = time.time()  # Initialize last_request_time
 
+extracted_text_global = ""
+
+
 def reset_daily_counters():
     global daily_request_count, daily_token_count, start_of_day
     while True:
