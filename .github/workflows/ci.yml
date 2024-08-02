@@ -25,6 +25,7 @@ jobs:
         run: |
           conda init bash
           source ~/.bashrc
+          conda activate health-record-chatbot
 
       - name: Install dependencies
         run: |

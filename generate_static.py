@@ -1,5 +1,5 @@
-from flask import Flask, render_template
 import os
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -13,12 +13,12 @@ def social_determinants():
 
 def build_static_site():
     with app.app_context():
-        if not os.path.exists('static_site'):
-            os.makedirs('static_site')
         templates = ['index.html', 'social_determinants.html']
         for template in templates:
             rendered = render_template(template)
-            with open(f'static_site/{template}', 'w') as f:
+            output_path = os.path.join('static_site', template)
+            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            with open(output_path, 'w') as f:
                 f.write(rendered)
 
 if __name__ == "__main__":
