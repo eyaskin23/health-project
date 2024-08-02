@@ -30,6 +30,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          conda init
           conda activate health-record-chatbot
           conda info --envs
           conda list
