@@ -20,6 +20,12 @@ jobs:
           environment-file: health.yml
           activate-environment: health-record-chatbot
 
+      - name: Initialize Conda
+        shell: bash -l {0}
+        run: |
+          conda init bash
+          source ~/.bashrc
+
       - name: Install dependencies
         run: |
           conda activate health-record-chatbot
