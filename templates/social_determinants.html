@@ -1,9 +1,10 @@
+<!-- social_determinants.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CliniqAI Social Determinants</title>
+    <title>Social Determinants of Health</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
@@ -66,18 +67,18 @@
 
         .card {
             margin-bottom: 20px;
-            height: 500px; /* Adjusted height */
-            padding: 30px; /* Added padding */
+            height: 400px; /* Adjusted height */
+            padding: 10px; /* Added padding */
         }
 
         .card img {
-            max-width: 100%;
+            max-width: 80%;
             height: auto;
         }
 
         .chart-container {
             width: 100%;
-            height: 350; /* Adjusted height */
+            height: 300px; /* Adjusted height */
             position: relative;
         }
 
@@ -106,7 +107,7 @@
         <a href="#reports"><i class="fas fa-file-alt"></i> Reports</a>
         <a href="#patients"><i class="fas fa-user-injured"></i> Patients</a>
         <a href="#settings"><i class="fas fa-cogs"></i> Settings</a>
-        <a href="/templates/social_determinants.html"><i class="fas fa-globe"></i> Social Determinants</a>
+        <a href="#social"><i class="fas fa-globe"></i> Social Determinants</a>
     </div>
 
     <div class="content">
@@ -124,48 +125,31 @@
         <h3>Social Determinants of Health</h3>
 
         <div class="row">
-            {% for stat in data %}
             <div class="col-md-6 col-sm-12">
                 <div class="card">
                     <div class="card-body text-center">
-                        <h5>{{ stat['Test'] }}</h5>
+                        <h4>Fresno Air Quality</h4>
                         <div class="chart-container">
-                            <img src="{{ url_for('static', filename='plots/' + stat['Image']) }}" alt="{{ stat['Test'] }}">
+                            <img src="/static/air_quality.png" alt="Air Quality">
+                            <p>{{ data.fresno_aqi }} Moderate</p>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
-
-        <div class="text-center">
-            <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
-        </div>
-
-        <div id="summary-container" class="text-center mt-3">
-            <h5>Summary</h5>
-            <p id="summary"></p>
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>California Population</h4>
+                        <div class="chart-container">
+                            <img src="/static/population.png" alt="Population">
+                            <p>{{ data.california_population }} Moderate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script>
-        function generateSummary() {
-            const socialData = {{ data|tojson }};
-            $.ajax({
-                type: 'POST',
-                url: '/generate_summary',
-                contentType: 'application/json',
-                data: JSON.stringify({ data: socialData }),
-                success: function(response) {
-                    $('#summary').text(response.summary);
-                },
-                error: function() {
-                    $('#summary').text('An error occurred while generating the summary.');
-                }
-            });
-        }
-    </script>
 </body>
 </html>
