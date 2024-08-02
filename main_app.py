@@ -123,7 +123,7 @@ def dashboard():
         #{"Test": "State Population", "Value": "2022", "Image": "california_population.svg"}
 
     ]
-    return render_template('index.html', data=data)
+    return render_template('dashboard.html', data=data)
 
 @app.route('/profile')
 def profile():
