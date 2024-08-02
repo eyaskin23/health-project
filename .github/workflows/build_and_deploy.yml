@@ -21,6 +21,12 @@ jobs:
           environment-file: health.yml
           auto-activate-base: false
 
+      - name: Initialize Conda
+        shell: bash -l {0}
+        run: |
+          conda init bash
+          source ~/.bashrc
+
       - name: Build static site
         run: |
           conda activate health-record-chatbot
