@@ -1,0 +1,38 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          python-version: 3.9
+          environment-file: health.yml
+          activate-environment: health-record-chatbot
+
+      - name: Install dependencies
+        run: |
+          source activate health-record-chatbot
+          conda info --envs
+          conda list
+
+      - name: Build static site
+        run: |
+          source activate health-record-chatbot
+          python generate_static.py
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./static_site
