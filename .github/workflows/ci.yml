@@ -19,12 +19,14 @@ jobs:
           python-version: 3.9
           environment-file: health.yml
           activate-environment: health-record-chatbot
+          auto-update-conda: true
 
       - name: Initialize Conda
-        shell: bash -l {0}
         run: |
           conda init bash
           source ~/.bashrc
+          conda info --envs
+          conda list
 
       - name: Install dependencies
         run: |
