@@ -1,0 +1,155 @@
+<!-- social_determinants.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Determinants of Health</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+        }
+
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #343a40;
+            padding-top: 20px;
+        }
+
+        .sidebar a {
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #ffffff;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #575d63;
+            color: #ffffff;
+        }
+
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
+
+        .navbar {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar img {
+            height: 60px;
+            margin-right: 10px;
+        }
+
+        .navbar .btn {
+            color: #ffffff;
+        }
+
+        .card {
+            margin-bottom: 20px;
+            height: 400px; /* Adjusted height */
+            padding: 10px; /* Added padding */
+        }
+
+        .card img {
+            max-width: 80%;
+            height: auto;
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 300px; /* Adjusted height */
+            position: relative;
+        }
+
+        .chart-container img {
+            max-width: 100%;
+            height: 100%;
+            display: block;
+            margin: auto;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #343a40;
+            color: #ffffff;
+            position: fixed;
+            width: calc(100% - 250px);
+            bottom: 0;
+            margin-left: 250px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="#reports"><i class="fas fa-file-alt"></i> Reports</a>
+        <a href="#patients"><i class="fas fa-user-injured"></i> Patients</a>
+        <a href="#settings"><i class="fas fa-cogs"></i> Settings</a>
+        <a href="#social"><i class="fas fa-globe"></i> Social Determinants</a>
+    </div>
+
+    <div class="content">
+        <div class="navbar">
+            <h2>
+                <img src="/static/logo.png" alt="Logo">
+                CliniqAI
+            </h2>
+            <div>
+                <button class="btn btn-outline-light" onclick="window.location.href='/profile'"><i class="fas fa-user"></i> Profile</button>
+                <button class="btn btn-outline-light" onclick="window.location.href='/chatbot'"><i class="fas fa-comments"></i> Chatbot</button>
+            </div>
+        </div>
+
+        <h3>Social Determinants of Health</h3>
+
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>Fresno Air Quality</h4>
+                        <div class="chart-container">
+                            <img src="/static/air_quality.png" alt="Air Quality">
+                            <p>75 Moderate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>California Population</h4>
+                        <div class="chart-container">
+                            <img src="/static/population.png" alt="Population">
+                            <p>38866193 Moderate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
