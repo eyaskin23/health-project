@@ -15,20 +15,15 @@ jobs:
         with:
           submodules: false  # Disable submodule fetching
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Set up Conda
+        uses: conda-incubator/setup-miniconda@v2
         with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-          pip install flask pandas numpy PyPDF2 matplotlib plotly openai==0.28 python-dotenv werkzeug
+          environment-file: health.yml
+          auto-activate-base: false
 
       - name: Build static site
         run: |
-          source venv/bin/activate
+          conda activate health-record-chatbot
           python generate_static.py
 
       - name: Deploy to GitHub Pages
