@@ -22,13 +22,13 @@ jobs:
 
       - name: Install dependencies
         run: |
-          source activate health-record-chatbot
+          conda activate health-record-chatbot
           conda info --envs
           conda list
 
       - name: Build static site
         run: |
-          source activate health-record-chatbot
+          conda activate health-record-chatbot
           python generate_static.py
 
       - name: Deploy to GitHub Pages
