@@ -17,5 +17,6 @@ dependencies:
   - pip
   - tika
   - pdf2image
+  - sqlite3
   - pip:
     - PyPDF2
