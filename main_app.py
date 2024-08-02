@@ -107,21 +107,23 @@ def dashboard():
         return redirect(url_for('login'))
     
     data = [
-        # {"Test": "WBC", "Value": 6.13, "Image": "WBC.svg"},
-        # {"Test": "RBC", "Value": 4.86, "Image": "RBC.svg"},
-        # {"Test": "HGB", "Value": 13.3, "Image": "HGB.svg"},
-        # {"Test": "HCT", "Value": 41.0, "Image": "HCT.svg"},
-        # {"Test": "MCV", "Value": 84.4, "Image": "MCV.svg"},
-        # {"Test": "MCH", "Value": 27.4, "Image": "MCH.svg"},
-        # {"Test": "MCHC", "Value": 32.4, "Image": "MCHC.svg"},
-        # {"Test": "RDW", "Value": 13.7, "Image": "RDW.svg"},
-        # {"Test": "PLATELET COUNT", "Value": 227, "Image": "PLATELET_COUNT.svg"},
-        # {"Test": "Hemoglobin A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.svg"},
-        # {"Test": "Glucose", "Value": 99, "Image": "Glucose.svg"},
-        {"Test": "Smoking Rates vs Air Quality", "Value": "Fresno: ", "Image": "california.svg"},
-        {"Test": "Smoking Rates vs Air Quality", "Value": "Fresno: ", "Image": "fresno_aqi.svg"}
+        {"Test": "WBC", "Value": 6.13, "Image": "WBC.svg"},
+        {"Test": "RBC", "Value": 4.86, "Image": "RBC.svg"},
+        {"Test": "HGB", "Value": 13.3, "Image": "HGB.svg"},
+        {"Test": "HCT", "Value": 41.0, "Image": "HCT.svg"},
+        {"Test": "MCV", "Value": 84.4, "Image": "MCV.svg"},
+        {"Test": "MCH", "Value": 27.4, "Image": "MCH.svg"},
+        {"Test": "MCHC", "Value": 32.4, "Image": "MCHC.svg"},
+        {"Test": "RDW", "Value": 13.7, "Image": "RDW.svg"},
+        {"Test": "PLATELET COUNT", "Value": 227, "Image": "PLATELET_COUNT.svg"},
+        {"Test": "Hemoglobin A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.svg"},
+        {"Test": "Glucose", "Value": 99, "Image": "Glucose.svg"},
+        #{"Test": "Smoking Rates vs Air Quality", "Value": "Fresno: ", "Image": "california.svg"},
+        #{"Test": "Air Quality", "Value": "Fresno: ", "Image": "fresno_aqi.svg"},
+        #{"Test": "State Population", "Value": "2022", "Image": "california_population.svg"}
+
     ]
-    return render_template('dashboard.html', data=data)
+    return render_template('index.html', data=data)
 
 @app.route('/profile')
 def profile():
@@ -153,6 +155,20 @@ def plot_to_svg(data, test):
     svg_data = img.getvalue().decode()
     plt.close()
     return svg_data
+
+@app.route('/social_determinants')
+def social_determinants():
+    if 'logged_in' not in session:
+        return redirect(url_for('login'))
+    
+    # Dummy data for visualization
+    social_data = [
+        {"Test": "Fresno Air Quality", "Value": 75, "Image": "fresno_aqi.svg"},
+        {"Test": "California Population", "Value": 38866193, "Image": "california_population.svg"}
+    ]
+    
+    return render_template('social_determinants.html', data=social_data)
+
 
 @app.route('/generate_plots')
 def generate_plots():
@@ -277,6 +293,35 @@ def chat():
 
     return jsonify({'reply': bot_reply})
 
+@app.route('/generate_summary', methods=['POST'])
+def generate_summary():
+    data = request.json.get('data')
+    
+    if data:
+        try:
+            # Prepare the prompt with the given data
+            prompt = "Generate a summary for the follow health data. Please keep it concise, max three/four sentences.:\n\n"
+            for stat in data:
+                prompt += f"{stat['Test']}: {stat['Value']}\n"
+
+            # Generate the summary using OpenAI's GPT-3.5 turbo
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=150
+            )
+
+            summary = response.choices[0].message['content'].strip()
+        except Exception as e:
+            summary = f"Error generating summary: {str(e)}"
+    else:
+        summary = "No data provided."
+
+    return jsonify({'summary': summary})
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port = 7000)
 
