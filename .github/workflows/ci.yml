@@ -36,3 +36,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./static_site
+          exclude_files: |
+            **/.*    # Exclude hidden files
+            **/new_env/bin/python3.12  # Exclude problematic Python binary reference
