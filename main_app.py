@@ -9,6 +9,7 @@ import os
 import time
 import threading
 import sqlite3
+import csv
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from generate_images import process_pdf
@@ -98,8 +99,8 @@ def register():
 @app.route('/')
 def home():
     if 'logged_in' not in session:
-        return redirect(url_for('login'))
-    return redirect('/dashboard')
+        return redirect(url_for('index'))
+    return redirect('/index')
 
 @app.route('/dashboard')
 def dashboard():
@@ -115,8 +116,8 @@ def dashboard():
         {"Test": "MCH", "Value": 27.4, "Image": "MCH.svg"},
         {"Test": "MCHC", "Value": 32.4, "Image": "MCHC.svg"},
         {"Test": "RDW", "Value": 13.7, "Image": "RDW.svg"},
-        {"Test": "PLATELET COUNT", "Value": 227, "Image": "PLATELET_COUNT.svg"},
-        {"Test": "Hemoglobin A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.svg"},
+        {"Test": "PLATELET_COUNT", "Value": 227, "Image": "PLATELET_COUNT.svg"},
+        {"Test": "Hemoglobin_A1c", "Value": 5.2, "Image": "Hemoglobin_A1c.svg"},
         {"Test": "Glucose", "Value": 99, "Image": "Glucose.svg"},
         #{"Test": "Smoking Rates vs Air Quality", "Value": "Fresno: ", "Image": "california.svg"},
         #{"Test": "Air Quality", "Value": "Fresno: ", "Image": "fresno_aqi.svg"},
@@ -143,6 +144,10 @@ def extract_text_from_pdf(pdf_path):
             text += page.extract_text()
     return text
 
+@app.route('/data_input')
+def data_input():
+    return render_template('data_input.html')
+
 def plot_to_svg(data, test):
     plt.figure()
     plt.plot(range(len(data)), data, marker='o', linestyle='-', color='b')
@@ -164,10 +169,34 @@ def social_determinants():
     # Dummy data for visualization
     social_data = [
         {"Test": "Fresno Air Quality", "Value": 75, "Image": "fresno_aqi.svg"},
-        {"Test": "California Population", "Value": 38866193, "Image": "california_population.svg"}
+        {"Test": "California Population", "Value": 38866193, "Image": "california_population.svg"},
+        {"Test": "Fresno Unemployment", "Value": 3.8, "Image": "fresno_unemployment.svg"}
     ]
     
     return render_template('social_determinants.html', data=social_data)
+
+
+@app.route('/index')
+def index():
+    
+    return render_template('index.html')
+
+@app.route('/submit_data', methods=['POST'])
+def submit_data():
+    name = request.form['name']
+    address = request.form['address']
+    age = request.form['age']
+    gender = request.form['gender']
+
+    file_exists = os.path.isfile('user_data.csv')
+    
+    with open('user_data.csv', mode='a', newline='') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(['Name', 'Address', 'Age', 'Gender'])
+        writer.writerow([name, address, age, gender])
+
+    return redirect(url_for('profile'))
 
 
 @app.route('/generate_plots')

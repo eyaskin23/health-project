@@ -11,7 +11,8 @@ def index():
 def social_determinants():
     data = {
         'fresno_aqi': 75,
-        'california_population': 38866193
+        'california_population': 38866193,
+        'unemployment_rate': 3.8
     }
     return render_template('social_determinants.html', data=data)
 
@@ -20,7 +21,8 @@ def build_static_site():
         # Define data for social determinants page
         data = {
             'fresno_aqi': 75,
-            'california_population': 38866193
+            'california_population': 38866193,
+            'unemployment_rate': 3.8
         }
         
         templates = ['index.html', 'social_determinants.html']

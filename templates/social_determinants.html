@@ -99,14 +99,41 @@
             bottom: 0;
             margin-left: 250px;
         }
+
+        #summary-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: 100px;
+            text-align: left;
+        }
+
+        #summary-container h5 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        #summary-container p {
+            font-size: 16px;
+            line-height: 1.5;
+            text-align: justify;
+        }
+
+
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a href="#reports"><i class="fas fa-file-alt"></i> Reports</a>
         <a href="#settings"><i class="fas fa-cogs"></i> Settings</a>
         <a href="/social_determinants"><i class="fas fa-globe"></i> Social Determinants</a>
+        <a href="index"><i class="fas fa-home"></i> Home Page</a>
+
     </div>
 
     <div class="content">
@@ -146,9 +173,50 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h4>Fresno Unemployment</h4>
+                        <div class="chart-container">
+                            <img src="/static/plots/fresno_unemployment.svg" alt="Unemployment">
+                            <p>{{ data.fresno_unemployment }} Moderate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="text-center">
+        <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
+    </div>
+
+    <div id="summary-container" class="text-center mt-3">
+        <h5>Summary</h5>
+        <p id="summary"></p>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    function generateSummary() {
+        const socialData = {{ data|tojson }};
+        $.ajax({
+            type: 'POST',
+            url: '/generate_summary',
+            contentType: 'application/json',
+            data: JSON.stringify({ data: socialData }),
+            success: function(response) {
+                $('#summary').text(response.summary);
+            },
+            error: function() {
+                $('#summary').text('An error occurred while generating the summary.');
+            }
+        });
+    }
+</script>
 </body>
 </html>

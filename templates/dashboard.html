@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CliniqAI Health Analytics Dashboard</title>
+    <title>Welcome to your lab data:</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #0d1b2a;
+            color: #ffffff;
         }
 
         .sidebar {
@@ -18,7 +19,7 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #343a40;
+            background-color: #1b263b;
             padding-top: 20px;
         }
 
@@ -31,8 +32,13 @@
         }
 
         .sidebar a:hover {
-            background-color: #575d63;
+            background-color: #ff4b5c;
             color: #ffffff;
+        }
+
+        .navbar-brand img {
+            height: 60px;
+            width: auto;
         }
 
         .content {
@@ -41,7 +47,7 @@
         }
 
         .navbar {
-            background-color: #343a40;
+            background-color: #1b263b;
             color: #ffffff;
             padding: 10px;
             display: flex;
@@ -65,33 +71,41 @@
         }
 
         .card {
+            background-color: #243447;
             margin-bottom: 20px;
-            height: 200px; /* Adjusted height */
-            padding: 10px; /* Added padding */
+            padding: 10px;
+            border: none;
         }
 
         .card img {
-            max-width: 80%;
+            max-width: 100%;
+            max-height: 100%;
             height: auto;
         }
 
         .chart-container {
             width: 100%;
-            height: 150px; /* Adjusted height */
-            position: relative;
+            height: 300px;  /* Adjusted for larger images */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .chart-container img {
-            max-width: 100%;
-            height: 100%;
-            display: block;
-            margin: auto;
+            width: 100%;
+            height: auto;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            color: #ffffff;
         }
 
         .footer {
             text-align: center;
             padding: 10px;
-            background-color: #343a40;
+            background-color: #1b263b;
             color: #ffffff;
             position: fixed;
             width: calc(100% - 250px);
@@ -130,15 +144,15 @@
             padding: 10px;
             font-size: 18px;
         }
-
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+        <a href="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a href="#reports"><i class="fas fa-file-alt"></i> Reports</a>
         <a href="#settings"><i class="fas fa-cogs"></i> Settings</a>
         <a href="/social_determinants"><i class="fas fa-globe"></i> Social Determinants</a>
+        <a href="/index"><i class="fas fa-home"></i> Home Page</a>
     </div>
 
     <div class="content">
@@ -153,7 +167,7 @@
             </div>
         </div>
 
-        <h3>Health Analytics Dashboard</h3>
+        <h3>Welcome to Your Lab Data:</h3>
 
         <div class="row">
             {% for stat in data %}
@@ -163,6 +177,7 @@
                         <div class="chart-container">
                             <img src="{{ url_for('static', filename='plots/' + stat['Image']) }}" alt="{{ stat['Test'] }}">
                         </div>
+                        <div class="card-title">{{ stat['Test'] }}</div>
                     </div>
                 </div>
             </div>
@@ -170,15 +185,13 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <div class="text-center">
-            <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
-        </div>
+        <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
+    </div>
 
-        <div id="summary-container" class="text-center mt-3">
-            <h5>Summary</h5>
-            <p id="summary"></p>
-        </div>
+    <div id="summary-container" class="text-center mt-3">
+        <h5>Summary</h5>
+        <p id="summary"></p>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

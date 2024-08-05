@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CliniqAI</title>
+    <title>Data Input - CliniqAI</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     <style>
@@ -29,35 +29,37 @@
             color: #ff4b5c;
         }
 
-        .navbar-brand img {
-            height: auto; 
-            width: 100px;
-        }
-
         .container {
-            text-align: center;
-            margin-top: 25%;
+            margin-top: 5%;
+            max-width: 600px;
             animation: fadeIn 2s ease-in-out;
         }
 
-        .container h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
 
-        .footer {
-            text-align: center;
-            padding: 10px;
+        .form-control {
             background-color: #1b263b;
+            border: 1px solid #ff4b5c;
             color: #ffffff;
-            position: fixed;
-            width: 100%;
-            bottom: 0;
+            padding: 0.75rem;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .form-control:focus {
+            background-color: #ff4b5c;
+            color: #1b263b;
+            transform: scale(1.02);
         }
 
         .btn-primary {
             background-color: #ff4b5c;
             border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            margin-bottom: 10px;
         }
 
         .btn-primary:hover {
@@ -77,6 +79,18 @@
 
         .navbar-brand img {
             height: 40px;
+        }
+
+        .btn-secondary {
+            background-color: #1b263b;
+            border: 1px solid #ff4b5c;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ff4b5c;
+            color: #1b263b;
         }
     </style>
 </head>
@@ -104,14 +118,32 @@
     </nav>
 
     <div class="container">
-        <h1>Want to know more about your health data?</h1>
-        <button class="btn btn-primary mt-3" onclick="location.href='data_input'">Get Started Here:</button>
+        <h1 class="text-center">Enter Your Information</h1>
+        <form method="post" action="{{ url_for('submit_data') }}">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" id="address" name="address" placeholder="Enter your address">
+            </div>
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="Enter your age">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender</label>
+                <select class="form-control" id="gender" name="gender">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                    <option>Prefer not to say</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-4">Submit</button>
+            <button type="button" class="btn btn-secondary btn-block mt-2" onclick="location.href='login'">Existing User?</button>
+        </form>
     </div>
-
-    <div class="footer">
-        © 2024 CliniqAI. All Rights Reserved.
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>

@@ -37,7 +37,7 @@ def visualize_lab_results(data, output_folder):
                     ha='center', fontsize=10, color='gray')
 
     for test, value in data.items():
-        fig, ax = plt.subplots(figsize=(6, 1))
+        fig, ax = plt.subplots(figsize=(12, 4))  # Adjusted figsize for better fit
         min_val, max_val = reference_ranges[test]
         create_number_line(ax, value, min_val, max_val, test)
         image_path = f"{output_folder}/{test}.svg"
