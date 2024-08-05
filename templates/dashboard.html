@@ -137,9 +137,8 @@
     <div class="sidebar">
         <a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
         <a href="#reports"><i class="fas fa-file-alt"></i> Reports</a>
-        <a href="#patients"><i class="fas fa-user-injured"></i> Patients</a>
         <a href="#settings"><i class="fas fa-cogs"></i> Settings</a>
-        <a href="/templates/social_determinants.html"><i class="fas fa-globe"></i> Social Determinants</a>
+        <a href="/social_determinants"><i class="fas fa-globe"></i> Social Determinants</a>
     </div>
 
     <div class="content">
@@ -185,21 +184,21 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-        // function generateSummary() {
-        //     const socialData = {{ data|tojson }};
-        //     $.ajax({
-        //         type: 'POST',
-        //         url: '/generate_summary',
-        //         contentType: 'application/json',
-        //         data: JSON.stringify({ data: socialData }),
-        //         success: function(response) {
-        //             $('#summary').text(response.summary);
-        //         },
-        //         error: function() {
-        //             $('#summary').text('An error occurred while generating the summary.');
-        //         }
-        //     });
-        // }
+        function generateSummary() {
+            const socialData = {{ data|tojson }};
+            $.ajax({
+                type: 'POST',
+                url: '/generate_summary',
+                contentType: 'application/json',
+                data: JSON.stringify({ data: socialData }),
+                success: function(response) {
+                    $('#summary').text(response.summary);
+                },
+                error: function() {
+                    $('#summary').text('An error occurred while generating the summary.');
+                }
+            });
+        }
     </script>
 </body>
 </html>
