@@ -102,6 +102,12 @@
             color: #ffffff;
         }
 
+        .summary-text {
+            font-size: 0.9rem;
+            color: #dddddd;
+            margin-top: 10px;
+        }
+
         .footer {
             text-align: center;
             padding: 10px;
@@ -123,6 +129,7 @@
             margin-left: auto;
             margin-right: 100px;
             text-align: left;
+            color: #000000;  /* Set text color to black */
         }
 
         #summary-container h5 {
@@ -175,9 +182,10 @@
                 <div class="card">
                     <div class="card-body text-center">
                         <div class="chart-container">
-                            <img src="{{ url_for('static', filename='plots/' + stat['Image']) }}" alt="{{ stat['Test'] }}">
+                            <img src="{{ url_for('static', filename='plots/' + stat['Test'].lower() + '.png') }}" alt="{{ stat['Test'] }}">
                         </div>
-                        <div class="card-title">{{ stat['Test'] }}</div>
+                        <div class="card-title">{{ stat['Test'] }}: {{ stat['Value'] }}</div>
+                        <div class="summary-text">{{ stat['Summary'] }}</div>
                     </div>
                 </div>
             </div>
@@ -199,12 +207,14 @@
     <script>
         function generateSummary() {
             const socialData = {{ data|tojson }};
+            console.log("Data sent to backend:", socialData); // Debugging output
             $.ajax({
                 type: 'POST',
                 url: '/generate_summary',
                 contentType: 'application/json',
                 data: JSON.stringify({ data: socialData }),
                 success: function(response) {
+                    console.log("Response from backend:", response); // Debugging output
                     $('#summary').text(response.summary);
                 },
                 error: function() {

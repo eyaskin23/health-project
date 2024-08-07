@@ -163,18 +163,17 @@ def plot_to_svg(data, test):
 
 @app.route('/social_determinants')
 def social_determinants():
-    if 'logged_in' not in session:
-        return redirect(url_for('login'))
-    
-    # Dummy data for visualization
-    social_data = [
-        {"Test": "Fresno Air Quality", "Value": 75, "Image": "fresno_aqi.svg"},
-        {"Test": "California Population", "Value": 38866193, "Image": "california_population.svg"},
-        {"Test": "Fresno Unemployment", "Value": 3.8, "Image": "fresno_unemployment.svg"}
-    ]
-    
-    return render_template('social_determinants.html', data=social_data)
-
+    fresno_unemployment = get_unemployment_rate('California')
+    fresno_smoker = get_smoker_rate('Fresno, CA')
+    print(f"Fresno Unemployment Rate: {fresno_unemployment}")  # Debugging statement
+    print(f"Fresno Smoker Rate: {fresno_smoker}")  # Debugging statement
+    data = {
+        'fresno_aqi': '75',
+        'california_population': '38,866,193',
+        'fresno_unemployment': fresno_unemployment,
+        'smoker_rate' : fresno_smoker
+    }
+    return render_template('social_determinants.html', data=data)
 
 @app.route('/index')
 def index():
@@ -203,17 +202,17 @@ def submit_data():
 def generate_plots():
     # Example time-series data
     time_series_data = {
-        "WBC": [6.1, 6.3, 6.2, 6.4, 6.1],
-        "RBC": [4.7, 4.8, 4.9, 4.8, 4.9],
-        "HGB": [13.2, 13.3, 13.5, 13.4, 13.3],
-        "HCT": [40.0, 41.0, 42.0, 41.0, 40.5],
-        "MCV": [85.0, 84.5, 84.0, 83.5, 84.0],
-        "MCH": [28.0, 27.5, 27.0, 26.5, 27.0],
-        "MCHC": [33.0, 32.5, 32.0, 32.5, 32.0],
-        "RDW": [13.5, 13.6, 13.7, 13.8, 13.7],
-        "PLATELET COUNT": [220, 230, 240, 235, 225],
-        "Hemoglobin A1c": [5.5, 5.4, 5.3, 5.4, 5.5],
-        "Glucose": [100, 98, 95, 97, 96]
+        "WBC": [6.1],
+        "RBC": [4.7],
+        "HGB": [13.2],
+        "HCT": [40.0],
+        "MCV": [85.0],
+        "MCH": [28.0],
+        "MCHC": [33.0],
+        "RDW": [13.5],
+        "PLATELET COUNT": [220],
+        "Hemoglobin A1c": [5.5],
+        "Glucose": [100]
     }
     svg_plots = {}
     for test, values in time_series_data.items():
@@ -350,6 +349,22 @@ def generate_summary():
         summary = "No data provided."
 
     return jsonify({'summary': summary})
+
+def get_unemployment_rate(state):
+    df = pd.read_csv('unemployment.csv')
+    rate = df[(df['State/Area'] == state) & (df['Year'] == 1976) & (df['Month'] == 1)]['Percent (%) of Labor Force Unemployed in State/Area'].values
+    if len(rate) > 0:
+        return rate[0]
+    else:
+        return None
+    
+def get_smoker_rate(city):
+    df = pd.read_csv('smoker_data.csv')
+    rate = df[df['City'] == city]['Percentage of adults who smoke'].values
+    if len(rate) > 0:
+        return rate[0]
+    else:
+        return None
 
 if __name__ == '__main__':
     app.run(debug=True, port = 7000)

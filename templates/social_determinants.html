@@ -1,4 +1,3 @@
-<!-- social_determinants.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,213 +9,149 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-        }
-
-        .sidebar {
-            height: 100vh;
-            width: 250px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: #343a40;
-            padding-top: 20px;
-        }
-
-        .sidebar a {
-            padding: 15px;
-            text-decoration: none;
-            font-size: 18px;
+            background-color: #0d1b2a;
             color: #ffffff;
-            display: block;
-        }
-
-        .sidebar a:hover {
-            background-color: #575d63;
-            color: #ffffff;
-        }
-
-        .content {
-            margin-left: 260px;
-            padding: 20px;
         }
 
         .navbar {
-            background-color: #343a40;
-            color: #ffffff;
+            background-color: #1b263b;
             padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .navbar h2 {
-            margin: 0;
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar img {
-            height: 60px;
-            margin-right: 10px;
-        }
-
-        .navbar .btn {
+        .navbar a {
             color: #ffffff;
+            margin: 0 15px;
         }
 
-        .card {
-            margin-bottom: 20px;
-            height: 400px; /* Adjusted height */
-            padding: 10px; /* Added padding */
+        .navbar a:hover {
+            color: #ff4b5c;
         }
 
-        .card img {
-            max-width: 80%;
-            height: auto;
-        }
-
-        .chart-container {
-            width: 100%;
-            height: 300px; /* Adjusted height */
-            position: relative;
-        }
-
-        .chart-container img {
-            max-width: 100%;
-            height: 100%;
-            display: block;
-            margin: auto;
+        .container {
+            text-align: center;
+            margin-top: 50px;
         }
 
         .footer {
             text-align: center;
             padding: 10px;
-            background-color: #343a40;
+            background-color: #1b263b;
             color: #ffffff;
             position: fixed;
-            width: calc(100% - 250px);
+            width: 100%;
             bottom: 0;
-            margin-left: 250px;
         }
 
-        #summary-container {
-            margin-top: 30px;
+        .summary {
+            background-color: #243447;
             padding: 20px;
-            background-color: #ffffff;
-            border: 1px solid #ddd;
             border-radius: 10px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: 100px;
+            margin-top: 20px;
             text-align: left;
         }
 
-        #summary-container h5 {
+        .det-summary {
+            margin-top: 20px;
+        }
+
+        .data-summary {
             font-size: 18px;
             margin-bottom: 10px;
         }
 
-        #summary-container p {
-            font-size: 16px;
-            line-height: 1.5;
-            text-align: justify;
+        .det-data {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
         }
 
+        .det-data:last-child {
+            border-bottom: none;
+        }
+
+        .det-data h4 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .det-data p {
+            margin: 0;
+            font-size: 18px;
+        }
 
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <a href="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-        <a href="#reports"><i class="fas fa-file-alt"></i> Reports</a>
-        <a href="#settings"><i class="fas fa-cogs"></i> Settings</a>
-        <a href="/social_determinants"><i class="fas fa-globe"></i> Social Determinants</a>
-        <a href="index"><i class="fas fa-home"></i> Home Page</a>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <a class="navbar-brand" href="#">CliniqAI</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Profile</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-    </div>
+    <div class="container">
+        <h1>Social Determinants of Health</h1>
 
-    <div class="content">
-        <div class="navbar">
-            <h2>
-                <img src="/static/logo.png" alt="Logo">
-                CliniqAI
-            </h2>
-            <div>
-                <button class="btn btn-outline-light" onclick="window.location.href='/profile'"><i class="fas fa-user"></i> Profile</button>
-                <button class="btn btn-outline-light" onclick="window.location.href='/chatbot'"><i class="fas fa-comments"></i> Chatbot</button>
+        <div class="summary">
+            <h2>Fresno Air Quality</h2>
+            <div class="det-data">
+                <h4>Value:</h4>
+                <p>{{ data.fresno_aqi }}</p>
+            </div>
+            <div class="det-summary">
+                <p>Air quality is crucial for respiratory health. Poor air quality can lead to various health issues, including asthma, bronchitis, and other respiratory infections.</p>
             </div>
         </div>
 
-        <h3>Social Determinants of Health</h3>
+        <div class="summary">
+            <h2>California Population</h2>
+            <div class="det-data">
+                <h4>Value:</h4>
+                <p>{{ data.california_population }}</p>
+            </div>
+            <div class="det-summary">
+                <p>Population size can impact public health infrastructure and resource allocation. Larger populations may require more robust healthcare services and infrastructure.</p>
+            </div>
+        </div>
 
-        <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h4>Fresno Air Quality</h4>
-                        <div class="chart-container">
-                            <img src="/static/plots/fresno_aqi.svg" alt="Air Quality">
-                            <p>{{ data.fresno_aqi }} Moderate</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="summary">
+            <h2>Fresno Unemployment</h2>
+            <div class="det-data">
+                <h4>Value:</h4>
+                <p>{{ data.fresno_unemployment }}%</p>
             </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h4>California Population</h4>
-                        <div class="chart-container">
-                            <img src="/static/plots/california_population.svg" alt="Population">
-                            <p>{{ data.california_population }} Moderate</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="det-summary">
+                <p>Unemployment can lead to financial instability, stress, and limited access to healthcare. It is associated with higher rates of mental health issues and poorer physical health outcomes.</p>
             </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <h4>Fresno Unemployment</h4>
-                        <div class="chart-container">
-                            <img src="/static/plots/fresno_unemployment.svg" alt="Unemployment">
-                            <p>{{ data.fresno_unemployment }} Moderate</p>
-                        </div>
-                    </div>
-                </div>
+        </div>
+
+        <div class="summary">
+            <h2>Smoker Rate</h2>
+            <div class="det-data">
+                <h4>Percentage of Adults Who Smoke:</h4>
+                <p>{{ data.smoker_rate }}%</p>
+            </div>
+            <div class="det-summary">
+                <p>Smoking is a major risk factor for various health issues, including COPD, cancer, and stroke. Addressing smoking can significantly improve public health outcomes.</p>
             </div>
         </div>
     </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div class="text-center">
-        <button class="btn btn-primary" onclick="generateSummary()">Generate Summary</button>
+    <div class="footer">
+        © 2024 CliniqAI. All Rights Reserved.
     </div>
 
-    <div id="summary-container" class="text-center mt-3">
-        <h5>Summary</h5>
-        <p id="summary"></p>
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script>
-    function generateSummary() {
-        const socialData = {{ data|tojson }};
-        $.ajax({
-            type: 'POST',
-            url: '/generate_summary',
-            contentType: 'application/json',
-            data: JSON.stringify({ data: socialData }),
-            success: function(response) {
-                $('#summary').text(response.summary);
-            },
-            error: function() {
-                $('#summary').text('An error occurred while generating the summary.');
-            }
-        });
-    }
-</script>
 </body>
 </html>

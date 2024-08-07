@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "health-project",
+			"path": "."
+		},
+		{
+			"name": "chest_xray",
+			"path": "../Downloads/chest_xray"
+		}
+	],
+	"settings": {}
+}
